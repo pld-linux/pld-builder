@@ -6,6 +6,7 @@ Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.gz
+# Source0-md5:	52bf879d996eb235173558bf32e20a8f
 Patch0:		%{name}-athlon.patch
 Requires:	smtpdaemon
 Requires:	crondaemon
