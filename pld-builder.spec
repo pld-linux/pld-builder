@@ -82,7 +82,7 @@ if [ "$1" = "0" ]; then
 fi
 
 %files
-%defattr(600,builder,root,700)
+%defattr(644,root,root,755)
 %attr(640,root,root) /etc/cron.d/builder
 %dir %{_builderdir}
 %dir %{_builderdir}/.requests-%{_target_cpu}
