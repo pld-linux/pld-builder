@@ -5,6 +5,7 @@ Version:	1.2
 Release:	1
 License:	GPL
 Group:		Development/Building
+Group(de):	Entwicklung/Bauen
 Group(pl):	Programowanie/Budowanie
 Source0:	ftp://ftp.pld.org.pl/packages/%{name}-%{version}.tar.gz
 Requires:	smtpdaemon
@@ -43,18 +44,18 @@ install -d $RPM_BUILD_ROOT%{_builderdir}/{.requests-%{_target_cpu},bin,Attic} \
 	$RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/bin \
 	$RPM_BUILD_ROOT/etc/cron.d
 
-install .builderrc $RPM_BUILD_ROOT%{_builderdir}/
-install .procmailrc $RPM_BUILD_ROOT%{_builderdir}/
-install bin/* $RPM_BUILD_ROOT%{_builderdir}/bin/
+install .builderrc $RPM_BUILD_ROOT%{_builderdir}
+install .procmailrc $RPM_BUILD_ROOT%{_builderdir}
+install bin/* $RPM_BUILD_ROOT%{_builderdir}/bin
 
-install chroot/.builderrc $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/
-install chroot/.rpmmacros $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/
+install chroot/.builderrc $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder
+install chroot/.rpmmacros $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder
 %ifarch %{ix86}
 install chroot/.rpmrc.%{_target_cpu} $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/.rpmrc
 %endif
-install chroot/bin/* $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/bin/
+install chroot/bin/* $RPM_BUILD_ROOT%{_builderdir}/chroot-%{_target_cpu}/home/users/builder/bin
 
-mv $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron.bak
+mv -f $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron.bak
 cat > $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron <<EOF
 #!/bin/sh
 
@@ -63,7 +64,10 @@ EOF
 cat $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron.bak >> $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron
 rm -f $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron.bak
 
-install cron/builder $RPM_BUILD_ROOT/etc/cron.d/
+install cron/builder $RPM_BUILD_ROOT/etc/cron.d
+
+%clean
+rm -rf $RPM_BUILD_ROOT
 
 %pre
 if [ "$1" = "1" ]; then
@@ -76,9 +80,6 @@ fi
 if [ "$1" = "0" ]; then
 	%{_sbindir}/userdel builder 2> /dev/null
 fi
-
-%clean
-rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(600,builder,root,700)
