@@ -1,5 +1,5 @@
-Summary:	PLD rpm builder environment.
-Summary(pl):	¦rodowisko budowniczego pakietów dla PLD.
+Summary:	PLD rpm builder environment
+Summary(pl):	¦rodowisko budowniczego pakietów dla PLD
 Name:		pld-builder
 Version:	1.0
 Release:	1
@@ -37,9 +37,9 @@ echo "ARCH=%{_target_cpu}" >> chroot/.builderrc
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/home/users/builder/{.requests,bin}
-install -d $RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/home/users/builder/bin
-install -d $RPM_BUILD_ROOT/etc/cron.d
+install -d $RPM_BUILD_ROOT/home/users/builder/{.requests,bin} \
+	$RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/home/users/builder/bin \
+	$RPM_BUILD_ROOT/etc/cron.d
 
 install .builderrc $RPM_BUILD_ROOT/home/users/builder/
 install .procmailrc $RPM_BUILD_ROOT/home/users/builder/
@@ -55,10 +55,10 @@ install chroot/bin/* $RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/ho
 install cron/builder $RPM_BUILD_ROOT/etc/cron.d/
 
 %pre
-if [ $1 = 1 ]; then
-    if [ ! -n "`id -u builder 2>/dev/null`" ]; then
-	%{_sbindir}/useradd -g users -d /home/users/builder -m -s /bin/bash builder 2> /dev/null
-    fi
+if [ "$1" = "1" ]; then
+	if [ ! -n "`id -u builder 2>/dev/null`" ]; then
+		%{_sbindir}/useradd -g users -d /home/users/builder -m -s /bin/bash builder 2> /dev/null
+	fi
 fi
 
 %postun
