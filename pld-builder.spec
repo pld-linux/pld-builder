@@ -5,8 +5,6 @@ Version:	1.2
 Release:	2
 License:	GPL
 Group:		Development/Building
-Group(de):	Entwicklung/Bauen
-Group(pl):	Programowanie/Budowanie
 Source0:	ftp://ftp.pld.org.pl/packages/%{name}-%{version}.tar.gz
 Patch0:		%{name}-athlon.patch
 Requires:	smtpdaemon
