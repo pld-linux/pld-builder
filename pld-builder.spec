@@ -66,16 +66,11 @@ rm -f $RPM_BUILD_ROOT%{_builderdir}/bin/buildrpm-cron.bak
 install cron/builder $RPM_BUILD_ROOT/etc/cron.d/
 
 %pre
-if [ "$1" = "1" ]; then
-	if [ ! -n "`id -u builder 2>/dev/null`" ]; then
-		%{_sbindir}/useradd -g users -d %{_builderdir} -m -s /bin/bash builder 2> /dev/null
-	fi
-fi
+USER=builder; GROUP=users; HOMEDIR="%{_builderdir} -m"; SHELL=/bin/bash
+%useradd
 
 %postun
-if [ "$1" = "0" ]; then
-	%{_sbindir}/userdel builder 2> /dev/null
-fi
+USER=builder; %userdel
 
 %clean
 rm -rf $RPM_BUILD_ROOT
