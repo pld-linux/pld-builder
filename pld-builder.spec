@@ -2,12 +2,13 @@ Summary:	PLD rpm builder environment
 Summary(pl):	¦rodowisko budowniczego pakietów dla PLD
 Name:		pld-builder
 Version:	1.2
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Group(de):	Entwicklung/Bauen
 Group(pl):	Programowanie/Budowanie
 Source0:	ftp://ftp.pld.org.pl/packages/%{name}-%{version}.tar.gz
+Patch0:		%{name}-athlon.patch
 Requires:	smtpdaemon
 Requires:	crondaemon
 Requires:	procmail
@@ -33,6 +34,7 @@ PLD rpm builder environment.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 echo "ARCH=%{_target_cpu}" >> .builderrc
