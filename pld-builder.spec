@@ -81,7 +81,7 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %files
-%defattr(600,builder,builder,700)
+%defattr(600,builder,root,700)
 %attr(640,root,root) /etc/cron.d/builder
 %dir %{_builderdir}
 %dir %{_builderdir}/.requests-%{_target_cpu}
@@ -93,5 +93,5 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not size mtime md5) %{_builderdir}/.procmailrc
 %config(noreplace) %verify(not size mtime md5) %{_builderdir}/chroot-%{_target_cpu}/home/users/builder/.builderrc
 %config(noreplace) %verify(not size mtime md5) %{_builderdir}/chroot-%{_target_cpu}/home/users/builder/.rpm*
-%attr(700,builder,builder) %config(noreplace) %verify(not size mtime md5) %{_builderdir}/bin/*
-%attr(700,builder,builder) %config(noreplace) %verify(not size mtime md5) %{_builderdir}/chroot-%{_target_cpu}/home/users/builder/bin/*
+%attr(700,builder,root) %config(noreplace) %verify(not size mtime md5) %{_builderdir}/bin/*
+%attr(700,builder,root) %config(noreplace) %verify(not size mtime md5) %{_builderdir}/chroot-%{_target_cpu}/home/users/builder/bin/*
