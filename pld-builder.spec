@@ -5,7 +5,7 @@ Version:	1.2
 Release:	2
 License:	GPL
 Group:		Development/Building
-Source0:	ftp://ftp.pld.org.pl/packages/%{name}-%{version}.tar.gz
+Source0:	%{name}-%{version}.tar.gz
 Patch0:		%{name}-athlon.patch
 Requires:	smtpdaemon
 Requires:	crondaemon
