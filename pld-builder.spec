@@ -73,13 +73,13 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 if [ "$1" = "1" ]; then
 	if [ ! -n "`id -u builder 2>/dev/null`" ]; then
-		%{_sbindir}/useradd -g users -d %{_builderdir} -m -s /bin/bash builder 2> /dev/null
+		/usr/sbin/useradd -g users -d %{_builderdir} -m -s /bin/bash builder 2> /dev/null
 	fi
 fi
 
 %postun
 if [ "$1" = "0" ]; then
-	%{_sbindir}/userdel builder 2> /dev/null
+	/usr/sbin/userdel builder 2> /dev/null
 fi
 
 %files
