@@ -1,7 +1,7 @@
 Summary:	PLD rpm builder environment
 Summary(pl):	¦rodowisko budowniczego pakietów dla PLD
 Name:		pld-builder
-Version:	1.0
+Version:	1.1
 Release:	1
 License:	GPL
 Group:		Development/Building
@@ -37,7 +37,7 @@ echo "ARCH=%{_target_cpu}" >> chroot/.builderrc
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/home/users/builder/{.requests,bin} \
+install -d $RPM_BUILD_ROOT/home/users/builder/{.requests-%{_target_cpu},bin} \
 	$RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/home/users/builder/bin \
 	$RPM_BUILD_ROOT/etc/cron.d
 
@@ -51,6 +51,15 @@ install chroot/.rpmmacros $RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cp
 install chroot/.rpmrc.%{_target_cpu} $RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/home/users/builder/.rpmrc
 %endif
 install chroot/bin/* $RPM_BUILD_ROOT/home/users/builder/chroot-%{_target_cpu}/home/users/builder/bin/
+
+mv $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron.bak
+cat > $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron <<EOF
+#!/bin/sh
+
+ARCH=%{_target_cpu}
+EOF
+cat $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron.bak >> $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron
+rm -f $RPM_BUILD_ROOT/home/users/builder/bin/buildrpm-cron.bak
 
 install cron/builder $RPM_BUILD_ROOT/etc/cron.d/
 
@@ -73,7 +82,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(600,builder,builder,700)
 %attr(640,root,root) /etc/cron.d/builder
 %dir /home/users/builder
-%dir /home/users/builder/.requests
+%dir /home/users/builder/.requests-%{_target_cpu}
 %dir /home/users/builder/bin
 %dir /home/users/builder/chroot-%{_target_cpu}
 %dir /home/users/builder/chroot-%{_target_cpu}/home/users/builder
