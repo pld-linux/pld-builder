@@ -3,7 +3,7 @@ Summary(pl):	¦rodowisko budowniczego pakietów dla PLD
 Name:		pld-builder
 %define		_snap	20051101
 Version:	0.0.%{_snap}
-Release:	0.7
+Release:	0.14
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{_snap}.tar.bz2
@@ -49,7 +49,7 @@ referred as STBR (Send To Builder Request).
 %setup -q -n %{name}.new
 
 sed -i -e '
-	s,~/pld-builder.new/,%{_sharedstatedir}/%{name},
+	s,~/pld-builder.new/,%{_sharedstatedir}/%{name}/,
 	/^conf_dir/s,=.*,= "%{_sysconfdir}/",
 
 ' PLD_Builder/path.py
@@ -81,7 +81,7 @@ done
 cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
-install -d %{_sharedstatedir}/%{name}
+install -d $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}/{spool/{builds,ftp},lock,www/{s,}rpms}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -100,6 +100,13 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_datadir}/admin/*
 
 %dir %{_sharedstatedir}/%{name}
+%dir %{_sharedstatedir}/%{name}/spool
+%dir %{_sharedstatedir}/%{name}/spool/builds
+%dir %{_sharedstatedir}/%{name}/spool/ftp
+%dir %{_sharedstatedir}/%{name}/lock
+%dir %{_sharedstatedir}/%{name}/www
+%dir %{_sharedstatedir}/%{name}/www/rpms
+%dir %{_sharedstatedir}/%{name}/www/srpms
 
 %files client
 %defattr(644,root,root,755)
