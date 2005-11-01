@@ -7,7 +7,7 @@ Release:	0.14
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{_snap}.tar.bz2
-# Source0-md5:	736f9e0dd3489a17c719625e5ff33d64
+# Source0-md5:	935e8edd4613686cfc88b793bfb6a6b6
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 Requires:	python-pld-builder = %{version}-%{release}
