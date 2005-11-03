@@ -1,5 +1,5 @@
-Summary:	PLD rpm builder environment
-Summary(pl):	¦rodowisko budowniczego pakietów dla PLD
+Summary:	PLD RPM builder environment
+Summary(pl):	¦rodowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 %define		_snap	20051101
 Version:	0.0.%{_snap}
@@ -18,7 +18,7 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 %define		_datadir	/usr/share/%{name}
 
 %description
-PLD rpm builder environment. This is the freshest "new" builder.
+PLD RPM builder environment. This is the freshest "new" builder.
 
 Other new and older attempts can be found from:
 http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder/
@@ -26,24 +26,39 @@ http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.old/
 http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 
 %description -l pl
-¦rodowisko budowniczego pakietów dla PLD.
+¦rodowisko budowniczego pakietów RPM dla PLD. To jest najnowszy "nowy"
+builder.
+
+Inne nowe i starsze próby mo¿na znale¼æ pod:
+http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder/
+http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.old/
+http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 
 %package -n python-pld-builder
 Summary:	PLD Builder
+Summary(pl):	Budowniczy PLD
 Group:		Development/Building
 %pyrequires_eq	python-modules
 
 %description -n python-pld-builder
-PLD Builder python code.
+PLD Builder Python code.
+
+%description -n python-pld-builder -l pl
+Kod pythonowy budowniczego PLD.
 
 %package client
 Summary:	PLD Builder client
+Summary(pl):	Klient budowniczych PLD
 Group:		Development/Building
 Requires:	gnupg
 
 %description client
 This is the client to send build requests to builders, it is usually
 referred as STBR (Send To Builder Request).
+
+%description client -l pl
+To jest klient do wysy³ania zleceñ na buildery, zwykle okre¶lanych
+jako STBR (Send To Builder Request).
 
 %prep
 %setup -q -n %{name}.new
