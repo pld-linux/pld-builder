@@ -8,6 +8,8 @@ License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{_snap}.tar.bz2
 # Source0-md5:	935e8edd4613686cfc88b793bfb6a6b6
+Source1:	%{name}.init
+Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 Requires:	python-pld-builder = %{version}-%{release}
@@ -96,10 +98,23 @@ done
 cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
-install -d $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}/{spool/{builds,ftp},lock,www/{s,}rpms}
+install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{builds,ftp},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
+
+install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
+install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 %clean
 rm -rf $RPM_BUILD_ROOT
+
+%post
+/sbin/chkconfig --add %{name}
+%service %{name} restart "pld-builder"
+
+%preun
+if [ "$1" = "0" ]; then
+        %service %{name} stop
+        /sbin/chkconfig --del %{name}
+fi
 
 %files
 %defattr(644,root,root,755)
@@ -122,6 +137,9 @@ rm -rf $RPM_BUILD_ROOT
 %dir %{_sharedstatedir}/%{name}/www
 %dir %{_sharedstatedir}/%{name}/www/rpms
 %dir %{_sharedstatedir}/%{name}/www/srpms
+
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
+%attr(754,root,root) /etc/rc.d/init.d/pld-builder
 
 %files client
 %defattr(644,root,root,755)
