@@ -1,7 +1,7 @@
+%define		_snap	20051101
 Summary:	PLD RPM builder environment
 Summary(pl):	¦rodowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
-%define		_snap	20051101
 Version:	0.0.%{_snap}
 Release:	0.14
 License:	GPL
@@ -12,7 +12,9 @@ Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
+Requires(post,preun):	/sbin/chkconfig
 Requires:	python-pld-builder = %{version}-%{release}
+Requires:	rc-scripts
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -112,8 +114,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %preun
 if [ "$1" = "0" ]; then
-        %service %{name} stop
-        /sbin/chkconfig --del %{name}
+	%service %{name} stop
+	/sbin/chkconfig --del %{name}
 fi
 
 %files
