@@ -114,9 +114,9 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%useradd -u 168 -g daemon -c "srpms builder" srpms_builder
-%useradd -u 169 -g daemon -c "bin builder" bin_builder
-%useradd -u 170 -g daemon -c "ftpac" ftpac
+%useradd -u 181 -g daemon -c "srpms builder" srpms_builder
+%useradd -u 182 -g daemon -c "bin builder" bin_builder
+%useradd -u 183 -g daemon -c "ftpac" ftpac
 
 %post
 /sbin/chkconfig --add %{name}
