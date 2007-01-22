@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl):	¦rodowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{_snap}
-Release:	0.16
+Release:	0.20
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{_snap}.tar.bz2
@@ -14,6 +14,10 @@ URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpmbuild(macros) >= 1.268
 Requires(post,preun):	/sbin/chkconfig
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/sbin/useradd
+Requires:	libuuid
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
 BuildArch:	noarch
@@ -109,6 +113,11 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%pre
+%useradd -u 168 -g daemon -c "srpms builder" srpms_builder
+%useradd -u 169 -g daemon -c "bin builder" bin_builder
+%useradd -u 170 -g daemon -c "ftpac" ftpac
+
 %post
 /sbin/chkconfig --add %{name}
 %service %{name} restart
@@ -117,6 +126,13 @@ rm -rf $RPM_BUILD_ROOT
 if [ "$1" = "0" ]; then
 	%service %{name} stop
 	/sbin/chkconfig --del %{name}
+fi
+
+%postun
+if [ "$1" = "0" ]; then
+	%userremove srpms_builder
+	%userremove bin_builder
+	%userremove ftpac
 fi
 
 %files
