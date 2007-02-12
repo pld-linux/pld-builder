@@ -1,6 +1,6 @@
 %define		_snap	20051101
 Summary:	PLD RPM builder environment
-Summary(pl):	¶rodowisko budowniczego pakietÛw RPM dla PLD
+Summary(pl.UTF-8):   ≈örodowisko budowniczego pakiet√≥w RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{_snap}
 Release:	0.20
@@ -34,30 +34,30 @@ http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder/
 http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.old/
 http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 
-%description -l pl
-¶rodowisko budowniczego pakietÛw RPM dla PLD. To jest najnowszy "nowy"
+%description -l pl.UTF-8
+≈örodowisko budowniczego pakiet√≥w RPM dla PLD. To jest najnowszy "nowy"
 builder.
 
-Inne nowe i starsze prÛby moøna znaleºÊ pod:
+Inne nowe i starsze pr√≥by mo≈ºna znale≈∫ƒá pod:
 http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder/
 http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.old/
 http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 
 %package -n python-pld-builder
 Summary:	PLD Builder
-Summary(pl):	Budowniczy PLD
+Summary(pl.UTF-8):   Budowniczy PLD
 Group:		Development/Building
 %pyrequires_eq	python-modules
 
 %description -n python-pld-builder
 PLD Builder Python code.
 
-%description -n python-pld-builder -l pl
+%description -n python-pld-builder -l pl.UTF-8
 Kod pythonowy budowniczego PLD.
 
 %package client
 Summary:	PLD Builder client
-Summary(pl):	Klient budowniczych PLD
+Summary(pl.UTF-8):   Klient budowniczych PLD
 Group:		Development/Building
 Requires:	gnupg
 
@@ -65,8 +65,8 @@ Requires:	gnupg
 This is the client to send build requests to builders, it is usually
 referred as STBR (Send To Builder Request).
 
-%description client -l pl
-To jest klient do wysy≥ania zleceÒ na buildery, zwykle okre∂lanych
+%description client -l pl.UTF-8
+To jest klient do wysy≈Çania zlece≈Ñ na buildery, zwykle okre≈õlanych
 jako STBR (Send To Builder Request).
 
 %prep
