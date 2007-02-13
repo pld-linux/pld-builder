@@ -1,6 +1,6 @@
 %define		_snap	20051101
 Summary:	PLD RPM builder environment
-Summary(pl.UTF-8):   Środowisko budowniczego pakietów RPM dla PLD
+Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{_snap}
 Release:	0.20
@@ -45,7 +45,7 @@ http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 
 %package -n python-pld-builder
 Summary:	PLD Builder
-Summary(pl.UTF-8):   Budowniczy PLD
+Summary(pl.UTF-8):	Budowniczy PLD
 Group:		Development/Building
 %pyrequires_eq	python-modules
 
@@ -57,7 +57,7 @@ Kod pythonowy budowniczego PLD.
 
 %package client
 Summary:	PLD Builder client
-Summary(pl.UTF-8):   Klient budowniczych PLD
+Summary(pl.UTF-8):	Klient budowniczych PLD
 Group:		Development/Building
 Requires:	gnupg
 
