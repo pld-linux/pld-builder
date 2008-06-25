@@ -13,6 +13,7 @@ Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpmbuild(macros) >= 1.268
+BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -72,7 +73,9 @@ jako STBR (Send To Builder Request).
 %prep
 %setup -q -n %{name}.new
 
-sed -i -e '
+mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
+
+%{__sed} -i -e '
 	s,~/pld-builder.new/,%{_sharedstatedir}/%{name}/,
 	/^conf_dir/s,=.*,= "%{_sysconfdir}/",
 
@@ -138,7 +141,9 @@ fi
 %files
 %defattr(644,root,root,755)
 %doc README TODO
-%lang(pl) %doc *.txt
+%doc user-manual.txt
+%lang(pl) %doc jak-to-dziala.txt jak-wysylac-zlecenia.txt
+
 %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
