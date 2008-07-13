@@ -3,19 +3,22 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{snap}
-Release:	0.20
+Release:	0.27
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
 # Source0-md5:	1346166c8e0a7dacd5152e49f8648409
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Patch0:		%{name}.patch
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
 Requires(post,preun):	/sbin/chkconfig
 Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/bin/id
 Requires(pre):	/usr/sbin/useradd
 Requires:	libuuid
@@ -72,6 +75,7 @@ jako STBR (Send To Builder Request).
 
 %prep
 %setup -q -n %{name}.new
+%patch0 -p1
 
 mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 
@@ -80,6 +84,8 @@ mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 	/^conf_dir/s,=.*,= "%{_sysconfdir}/",
 
 ' PLD_Builder/path.py
+
+%{__sed} -i -e 's,pld-linux\.org,example.org,g' config/builder.conf
 
 %build
 %{__make}
@@ -108,7 +114,7 @@ done
 cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
-install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{builds,ftp},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
+install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
@@ -117,8 +123,9 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%useradd -u 181 -g daemon -c "srpms builder" srpms_builder
-%useradd -u 182 -g daemon -c "bin builder" bin_builder
+%groupadd -g 181 pld-builder
+%useradd -u 181 -g pld-builder -c "srpms builder" srpms_builder
+%useradd -u 182 -g pld-builder -c "bin builder" bin_builder
 %useradd -u 183 -g daemon -c "ftpac" ftpac
 
 %post
@@ -136,6 +143,7 @@ if [ "$1" = "0" ]; then
 	%userremove srpms_builder
 	%userremove bin_builder
 	%userremove ftpac
+	%groupremove pld-builder
 fi
 
 %files
@@ -154,10 +162,12 @@ fi
 %attr(755,root,root) %{_datadir}/admin/*
 
 %dir %{_sharedstatedir}/%{name}
-%dir %{_sharedstatedir}/%{name}/spool
+%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool
+%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/buildlogs
 %dir %{_sharedstatedir}/%{name}/spool/builds
 %dir %{_sharedstatedir}/%{name}/spool/ftp
-%dir %{_sharedstatedir}/%{name}/lock
+%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/notify
+%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/lock
 %dir %{_sharedstatedir}/%{name}/www
 %dir %{_sharedstatedir}/%{name}/www/rpms
 %dir %{_sharedstatedir}/%{name}/www/srpms
