@@ -1,4 +1,4 @@
-%define		snap	20080625
+%define		snap	20080713
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
@@ -10,7 +10,6 @@ Source0:	%{name}.new-%{snap}.tar.bz2
 # Source0-md5:	1346166c8e0a7dacd5152e49f8648409
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
-Patch0:		%{name}.patch
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpmbuild(macros) >= 1.268
@@ -75,7 +74,6 @@ jako STBR (Send To Builder Request).
 
 %prep
 %setup -q -n %{name}.new
-%patch0 -p1
 
 mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 
