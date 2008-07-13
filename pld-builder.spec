@@ -7,7 +7,7 @@ Release:	0.27
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
-# Source0-md5:	1346166c8e0a7dacd5152e49f8648409
+# Source0-md5:	954f612ed3c4d937d92090171f4eb4ed
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
