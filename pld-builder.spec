@@ -11,7 +11,6 @@ Source0:	%{name}.new-%{snap}.tar.bz2
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
-BuildRequires:	python
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.268
 BuildRequires:	sed >= 4.0
@@ -21,6 +20,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	crondaemon
 Requires:	libuuid
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
