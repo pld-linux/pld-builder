@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{snap}
-Release:	0.28
+Release:	0.34
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
@@ -24,6 +24,10 @@ Requires:	crondaemon
 Requires:	libuuid
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
+Provides:	group(builder)
+Provides:	user(builder)
+Provides:	user(ftpac)
+Provides:	user(srpms_builder)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -58,6 +62,21 @@ PLD Builder Python code.
 
 %description -n python-pld-builder -l pl.UTF-8
 Kod pythonowy budowniczego PLD.
+
+%package chroot
+Summary:	PLD Builder chroot
+Group:		Development/Building
+Requires(postun):	/usr/sbin/userdel
+Requires(pre):	/bin/id
+Requires(pre):	/usr/bin/getgid
+Requires(pre):	/usr/sbin/groupadd
+Requires(pre):	/usr/sbin/useradd
+Requires:	rpm-build
+Provides:	group(builder)
+Provides:	user(builder)
+
+%description chroot
+This is the package to be installed in builder chroot.
 
 %package client
 Summary:	PLD Builder client
@@ -114,13 +133,14 @@ cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
+install -d $RPM_BUILD_ROOT/home/services/builder
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 # from admin/fresh-queue.sh
 cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
-mkdir -p spool/{builds,buildlogs,notify,ftp} www/srpms lock
+install -d spool/{builds,buildlogs,notify,ftp} www/srpms lock
 echo 0 > www/max_req_no
 echo 0 > spool/last_req_no
 echo -n > spool/processed_ids
@@ -137,10 +157,14 @@ fi
 rm -rf $RPM_BUILD_ROOT
 
 %pre
-%groupadd -g 181 pld-builder
-%useradd -u 181 -g pld-builder -c "srpms builder" srpms_builder
-%useradd -u 182 -g pld-builder -c "bin builder" bin_builder
+%groupadd -g 181 builder
+%useradd -u 181 -g builder -c "srpms builder" srpms_builder
+%useradd -u 182 -g builder -c "bin builder" -s /bin/sh -d /home/services/builder builder
 %useradd -u 183 -g daemon -c "ftpac" ftpac
+
+%pre chroot
+%groupadd -g 181 builder
+%useradd -u 182 -g builder -c "bin builder" -s /bin/sh -d /home/services/builder builder
 
 %post
 /sbin/chkconfig --add %{name}
@@ -155,9 +179,15 @@ fi
 %postun
 if [ "$1" = "0" ]; then
 	%userremove srpms_builder
-	%userremove bin_builder
+	%userremove builder
 	%userremove ftpac
-	%groupremove pld-builder
+	%groupremove builder
+fi
+
+%postun chroot
+if [ "$1" = "0" ]; then
+	%userremove builder
+	%groupremove builder
 fi
 
 %files
@@ -180,11 +210,11 @@ fi
 
 %dir %{_sharedstatedir}/%{name}
 
-%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool
-%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/buildlogs
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/buildlogs
 %dir %{_sharedstatedir}/%{name}/spool/builds
 %dir %{_sharedstatedir}/%{name}/spool/ftp
-%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/notify
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/notify
 
 %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/got_lock
 %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/last_req_no
@@ -192,12 +222,18 @@ fi
 %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/queue
 %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/req_queue
 
-%dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/lock
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/lock
 
 %dir %{_sharedstatedir}/%{name}/www
 %dir %{_sharedstatedir}/%{name}/www/rpms
 %dir %{_sharedstatedir}/%{name}/www/srpms
 %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/www/max_req_no
+
+%dir %attr(750,builder,builder) /home/services/builder
+
+%files chroot
+%defattr(644,root,root,755)
+%dir %attr(750,builder,builder) /home/services/builder
 
 %files client
 %defattr(644,root,root,755)
