@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{snap}
-Release:	0.34
+Release:	0.40
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
@@ -21,6 +21,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	crondaemon
+Requires:	gnupg
 Requires:	libuuid
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
