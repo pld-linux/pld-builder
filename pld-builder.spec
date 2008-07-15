@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{snap}
-Release:	0.27
+Release:	0.28
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
@@ -118,6 +118,21 @@ install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,f
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
+# from admin/fresh-queue.sh
+cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
+mkdir -p spool/{builds,buildlogs,notify,ftp} www/srpms lock
+echo 0 > www/max_req_no
+echo 0 > spool/last_req_no
+echo -n > spool/processed_ids
+echo -n > spool/got_lock
+echo '<queue/>' > spool/queue
+echo '<queue/>' > spool/req_queue
+if [ "$binary_builders" ]; then
+	for bb in $binary_builders; do
+		echo '<queue/>' > spool/queue-$bb
+	done
+fi
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
@@ -151,6 +166,9 @@ fi
 %doc user-manual.txt
 %lang(pl) %doc jak-to-dziala.txt jak-wysylac-zlecenia.txt
 
+%attr(754,root,root) /etc/rc.d/init.d/pld-builder
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
+
 %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
 
@@ -161,18 +179,25 @@ fi
 %attr(755,root,root) %{_datadir}/admin/*
 
 %dir %{_sharedstatedir}/%{name}
+
 %dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool
 %dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/buildlogs
 %dir %{_sharedstatedir}/%{name}/spool/builds
 %dir %{_sharedstatedir}/%{name}/spool/ftp
 %dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/spool/notify
+
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/got_lock
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/last_req_no
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/processed_ids
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/queue
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/req_queue
+
 %dir %attr(775,root,pld-builder) %{_sharedstatedir}/%{name}/lock
+
 %dir %{_sharedstatedir}/%{name}/www
 %dir %{_sharedstatedir}/%{name}/www/rpms
 %dir %{_sharedstatedir}/%{name}/www/srpms
-
-%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
-%attr(754,root,root) /etc/rc.d/init.d/pld-builder
+%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/www/max_req_no
 
 %files client
 %defattr(644,root,root,755)
