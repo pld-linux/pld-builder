@@ -66,6 +66,7 @@ Kod pythonowy budowniczego PLD.
 
 %package chroot
 Summary:	PLD Builder chroot
+Summary(pl.UTF-8):	Środowisko chroot buildera PLD
 Group:		Development/Building
 Requires(postun):	/usr/sbin/userdel
 Requires(pre):	/bin/id
@@ -78,6 +79,9 @@ Provides:	user(builder)
 
 %description chroot
 This is the package to be installed in builder chroot.
+
+%description chroot -l pl.UTF-8
+Ten pakiet należy zainstalować w środowisku chroot buildera.
 
 %package client
 Summary:	PLD Builder client
