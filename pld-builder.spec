@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.0.%{snap}
-Release:	0.40
+Release:	0.47
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}.new-%{snap}.tar.bz2
@@ -134,7 +134,9 @@ cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
-install -d $RPM_BUILD_ROOT/home/services/builder
+install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
+install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
+install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
@@ -213,28 +215,36 @@ fi
 
 %dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool
 %dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/buildlogs
-%dir %{_sharedstatedir}/%{name}/spool/builds
-%dir %{_sharedstatedir}/%{name}/spool/ftp
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/builds
+%dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/ftp
 %dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/spool/notify
 
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/got_lock
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/last_req_no
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/processed_ids
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/queue
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/req_queue
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/got_lock
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/last_req_no
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/processed_ids
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/queue
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/req_queue
 
 %dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/lock
 
 %dir %{_sharedstatedir}/%{name}/www
 %dir %{_sharedstatedir}/%{name}/www/rpms
 %dir %{_sharedstatedir}/%{name}/www/srpms
-%config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/www/max_req_no
+%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/www/max_req_no
 
 %dir %attr(750,builder,builder) /home/services/builder
+%dir %attr(750,builder,builder) /home/services/builder/.gnupg
+%dir %attr(700,builder,builder) /home/services/builder/.ssh
 
 %files chroot
 %defattr(644,root,root,755)
 %dir %attr(750,builder,builder) /home/services/builder
+%dir %attr(750,builder,builder) /home/services/builder/rpm
+%dir %attr(750,builder,builder) /home/services/builder/rpm/BUILD
+%dir %attr(750,builder,builder) /home/services/builder/rpm/RPMS
+%dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
+%dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
+%dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
 
 %files client
 %defattr(644,root,root,755)
