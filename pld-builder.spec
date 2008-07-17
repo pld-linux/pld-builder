@@ -20,6 +20,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	bash
 Requires:	crondaemon
 Requires:	gnupg
 Requires:	libuuid
@@ -73,6 +74,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	bash
 Requires:	rpm-build
 Provides:	group(builder)
 Provides:	user(builder)
@@ -166,12 +168,12 @@ rm -rf $RPM_BUILD_ROOT
 %pre
 %groupadd -g 181 builder
 %useradd -u 181 -g builder -c "srpms builder" srpms_builder
-%useradd -u 182 -g builder -c "bin builder" -s /bin/sh -d /home/services/builder builder
+%useradd -u 182 -g builder -c "bin builder" -s /bin/bash -d /home/services/builder builder
 %useradd -u 183 -g daemon -c "ftpac" ftpac
 
 %pre chroot
 %groupadd -g 181 builder
-%useradd -u 182 -g builder -c "bin builder" -s /bin/sh -d /home/services/builder builder
+%useradd -u 182 -g builder -c "bin builder" -s /bin/bash -d /home/services/builder builder
 
 %post
 /sbin/chkconfig --add %{name}
