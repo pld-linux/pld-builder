@@ -2,11 +2,11 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.1
-Release:	0.58
+Release:	0.60
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	2aa803fe1ee4dc52fb5b4ebcd469b79a
+# Source0-md5:	d58d7f16f59569551cf3f06d2a00aeac
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -24,6 +24,7 @@ Requires:	bash
 Requires:	crondaemon
 Requires:	gnupg
 Requires:	libuuid
+Requires:	python
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
 Provides:	group(builder)
@@ -99,7 +100,7 @@ mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 
 %{__sed} -i -e '
 	s,pld-linux\.org,example.org,g
-	s,/spools/ready,/var/cache/%{name}/ready
+	s,/spools/ready,/var/cache/%{name}/ready,
 ' config/builder.conf
 
 cat <<'EOF' > poldek.conf
