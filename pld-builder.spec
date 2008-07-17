@@ -1,13 +1,12 @@
-%define		snap	20080717
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
-Version:	0.0.%{snap}
+Version:	0.1
 Release:	0.48
 License:	GPL
 Group:		Development/Building
-Source0:	%{name}.new-%{snap}.tar.bz2
-# Source0-md5:	a09e56c24c9c15998b65568a1b48769f
+Source0:	pld-builder-0.1.tar.bz2
+# Source0-md5:	7cdbcf91989141c197aa8824ff510cb8
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -86,22 +85,8 @@ This is the package to be installed in builder chroot.
 %description chroot -l pl.UTF-8
 Ten pakiet należy zainstalować w środowisku chroot buildera.
 
-%package client
-Summary:	PLD Builder client
-Summary(pl.UTF-8):	Klient budowniczych PLD
-Group:		Development/Building
-Requires:	gnupg
-
-%description client
-This is the client to send build requests to builders, it is usually
-referred as STBR (Send To Builder Request).
-
-%description client -l pl.UTF-8
-To jest klient do wysyłania zleceń na buildery, zwykle określanych
-jako STBR (Send To Builder Request).
-
 %prep
-%setup -q -n %{name}.new
+%setup -q
 
 mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 
@@ -119,9 +104,6 @@ mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 
 %install
 rm -rf $RPM_BUILD_ROOT
-# client
-install -d $RPM_BUILD_ROOT%{_bindir}
-install client/make-request.sh $RPM_BUILD_ROOT%{_bindir}/%{name}-make-request
 
 # python
 install -d $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
@@ -253,10 +235,6 @@ fi
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
-
-%files client
-%defattr(644,root,root,755)
-%attr(755,root,root) %{_bindir}/%{name}-make-request
 
 %files -n python-pld-builder
 %defattr(644,root,root,755)
