@@ -2,10 +2,10 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.1
-Release:	0.48
+Release:	0.51
 License:	GPL
 Group:		Development/Building
-Source0:	pld-builder-0.1.tar.bz2
+Source0:	%{name}-%{version}.tar.bz2
 # Source0-md5:	7cdbcf91989141c197aa8824ff510cb8
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
@@ -75,6 +75,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	bash
+Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
 Provides:	group(builder)
 Provides:	user(builder)
@@ -97,6 +98,15 @@ mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
 ' PLD_Builder/path.py
 
 %{__sed} -i -e 's,pld-linux\.org,example.org,g' config/builder.conf
+
+cat <<'EOF' > poldek.conf
+# locally cached rpms
+[source]
+name = ready
+pri  = -1
+type = pndir
+path = /var/cache/%{name}/ready
+EOF
 
 %build
 %{__make}
@@ -127,7 +137,10 @@ install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,f
 install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
 install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
+install -d $RPM_BUILD_ROOT/var/cache/%{name}/ready
+install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
 
+cp -a poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
@@ -235,6 +248,11 @@ fi
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
+
+# locally cached rpms from bin-builder
+%config(noreplace) %verify(not md5 mtime size) /etc/poldek/repos.d/%{name}.conf
+%dir /var/cache/%{name}/ready
+%dir %attr(775,root,builder) /var/cache/%{name}/ready
 
 %files -n python-pld-builder
 %defattr(644,root,root,755)
