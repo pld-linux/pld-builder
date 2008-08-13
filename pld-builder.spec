@@ -1,12 +1,12 @@
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
-Version:	0.1
-Release:	0.60
+Version:	0.2
+Release:	0.1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	d58d7f16f59569551cf3f06d2a00aeac
+# Source0-md5:	7699bd2ac6da8f5f771ed4a5725acaa6
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -129,7 +129,6 @@ cp -a config/{rsync-passwords,*.conf} $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/{bin,admin}
 for a in bin/*.sh; do
 sed -e '
-#	s,cd ~/pld-builder.new,cd %{py_scriptdir},
 	/cd ~\/pld-builder.new/d
 	s,python \(PLD_Builder.*.py\),python %{py_scriptdir}/\1c,
 ' $a > $RPM_BUILD_ROOT%{_datadir}/bin/$(basename $a)
@@ -255,7 +254,7 @@ fi
 
 # locally cached rpms from bin-builder
 %config(noreplace) %verify(not md5 mtime size) /etc/poldek/repos.d/%{name}.conf
-%dir /var/cache/%{name}/ready
+%dir /var/cache/%{name}
 %dir %attr(775,root,builder) /var/cache/%{name}/ready
 
 %files -n python-pld-builder
