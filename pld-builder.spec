@@ -2,7 +2,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.2
-Release:	0.3
+Release:	0.5
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -113,6 +113,21 @@ type = pndir
 path = /var/cache/%{name}/ready
 EOF
 
+cat <<'EOF' > rpm.macros
+# rpm macros for pld builder chroot
+
+# A colon separated list of desired locales to be installed;
+# "all" means install all locale specific files.
+%%_install_langs en_US
+
+# If non-zero, all erasures will be automagically repackaged.
+%%_repackage_all_erasures    0
+
+# Boolean (i.e. 1 == "yes", 0 == "no") that controls whether files
+# marked as %doc should be installed.
+%%_excludedocs   1
+EOF
+
 %build
 %{__make}
 %py_lint PLD_Builder
@@ -142,9 +157,13 @@ install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
 install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SOURCES,SPECS,SRPMS}
 install -d $RPM_BUILD_ROOT/var/cache/%{name}/ready
-install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
 
+install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
 cp -a poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
+
+install -d $RPM_BUILD_ROOT/etc/rpm
+cp -a rpm.macros $RPM_BUILD_ROOT/etc/rpm/macros.builder
+
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
@@ -252,6 +271,9 @@ fi
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
+
+# minimal but sane defaults for rpm inside chroot
+%config(noreplace) %verify(not md5 mtime size) /etc/rpm/macros.builder
 
 # locally cached rpms from bin-builder
 %config(noreplace) %verify(not md5 mtime size) /etc/poldek/repos.d/%{name}.conf
