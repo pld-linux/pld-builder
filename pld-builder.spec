@@ -2,7 +2,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.2
-Release:	0.1
+Release:	0.3
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -78,6 +78,7 @@ Requires(pre):	/usr/sbin/useradd
 Requires:	bash
 Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
+Requires:	tmpwatch
 Provides:	group(builder)
 Provides:	user(builder)
 
