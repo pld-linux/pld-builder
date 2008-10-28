@@ -2,7 +2,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.2
-Release:	0.5
+Release:	0.50
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -174,6 +174,10 @@ cp -a poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
 install -d $RPM_BUILD_ROOT/etc/rpm
 cp -a rpm.macros $RPM_BUILD_ROOT/etc/rpm/macros.builder
 
+# crontab
+install -d $RPM_BUILD_ROOT/etc/cron.d
+cp -a crontab $RPM_BUILD_ROOT/etc/cron.d/%{name}
+
 install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
 install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
@@ -191,9 +195,6 @@ if [ "$binary_builders" ]; then
 		echo '<queue/>' > spool/queue-$bb
 	done
 fi
-# crontab
-install -d $RPM_BUILD_ROOT/etc/cron.d
-cp -a crontab $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
