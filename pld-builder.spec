@@ -29,8 +29,6 @@ Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
 Provides:	group(builder)
 Provides:	user(builder)
-Provides:	user(ftpac)
-Provides:	user(srpms_builder)
 BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -113,6 +111,17 @@ type = pndir
 path = /var/cache/%{name}/ready
 EOF
 
+cat <<'EOF' > crontab
+SHELL=/bin/sh
+MAILTO=root
+
+#* * * * * builder exec nice -n 19 %{_datadir}/bin/request-fetcher.sh
+#* * * * * builder exec nice -n 19 %{_datadir}/bin/load-balancer.sh
+#* * * * * builder exec nice -n 19 %{_datadir}/bin/file-sender.sh
+
+#0 0 * * * chroot /home/users/builder/chroot-ac nice -n 19 tmpwatch -m 240 /var/cache/%{name}/ready
+EOF
+
 cat <<'EOF' > rpm.macros
 # rpm macros for pld builder chroot
 
@@ -125,7 +134,8 @@ cat <<'EOF' > rpm.macros
 
 # Boolean (i.e. 1 == "yes", 0 == "no") that controls whether files
 # marked as %doc should be installed.
-%%_excludedocs   1
+# FIXME: excludedocs breaks kde build
+#%%_excludedocs   1
 EOF
 
 %build
@@ -181,15 +191,16 @@ if [ "$binary_builders" ]; then
 		echo '<queue/>' > spool/queue-$bb
 	done
 fi
+# crontab
+install -d $RPM_BUILD_ROOT/etc/cron.d
+cp -a crontab $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %pre
 %groupadd -g 181 builder
-%useradd -u 181 -g builder -c "srpms builder" srpms_builder
 %useradd -u 182 -g builder -c "bin builder" -s /bin/bash -d /home/services/builder builder
-%useradd -u 183 -g daemon -c "ftpac" ftpac
 
 %pre chroot
 %groupadd -g 181 builder
@@ -207,9 +218,7 @@ fi
 
 %postun
 if [ "$1" = "0" ]; then
-	%userremove srpms_builder
 	%userremove builder
-	%userremove ftpac
 	%groupremove builder
 fi
 
@@ -227,6 +236,8 @@ fi
 
 %attr(754,root,root) /etc/rc.d/init.d/pld-builder
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
+
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
 
 %dir %{_sysconfdir}
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
