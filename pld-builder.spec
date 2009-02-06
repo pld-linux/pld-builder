@@ -2,7 +2,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.2
-Release:	0.55
+Release:	0.56
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -74,6 +74,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	bash
+Requires:	mount
 Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
 Requires:	tmpwatch
@@ -123,6 +124,24 @@ MAILTO=root
 #* * * * * builder exec nice -n 19 %{_datadir}/bin/file-sender.sh
 
 #0 0 * * * chroot /home/users/builder/chroot-ac nice -n 19 tmpwatch -m 240 /var/cache/%{name}/ready
+EOF
+
+cat <<'EOF' > procmailrc
+LOGFILE=procmail.log
+
+#:0 c
+#mail.copy
+
+:0
+* ^X-New-PLD-Builder:
+| %{_datadir}/bin/request-handler.sh
+
+:0
+* ^FROM_MAILER
+/dev/null
+
+#:0
+#!root@example.org
 EOF
 
 cat <<'EOF' > rpm.macros
