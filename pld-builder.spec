@@ -6,7 +6,7 @@ Version:	0.3.%{snap}
 Release:	1
 License:	GPL
 Group:		Development/Building
-Source0:	http://carme.pld-linux.org/~glen/%{name}-%{version}.tar.bz2
+Source0:	%{name}-%{version}.tar.bz2
 # Source0-md5:	2284943fb952e32ecec8a0d7fd60ea8e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
