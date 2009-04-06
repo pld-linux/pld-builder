@@ -1,4 +1,4 @@
-%define		snap	20090330
+%define		snap	20090406
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
@@ -7,7 +7,7 @@ Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	http://carme.pld-linux.org/~glen/%{name}-%{version}.tar.bz2
-# Source0-md5:	c79d3ec2a45a917f3b59a475a5852ec8
+# Source0-md5:	2284943fb952e32ecec8a0d7fd60ea8e
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -93,9 +93,6 @@ Ten pakiet należy zainstalować w środowisku chroot buildera.
 
 %prep
 %setup -q
-
-mv jak-wysy?a?-zlecenia.txt jak-wysylac-zlecenia.txt
-
 %{__sed} -i -e '
 	s,~/pld-builder.new/,%{_sharedstatedir}/%{name}/,
 	/^conf_dir/s,=.*,= "%{_sysconfdir}/",
