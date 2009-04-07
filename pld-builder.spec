@@ -28,6 +28,7 @@ Requires:	libuuid
 Requires:	python
 Requires:	python-pld-builder = %{version}-%{release}
 Requires:	rc-scripts
+Requires:	rsync
 Provides:	group(builder)
 Provides:	user(builder)
 BuildArch:	noarch
