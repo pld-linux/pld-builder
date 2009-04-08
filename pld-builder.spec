@@ -1,13 +1,13 @@
-%define		snap	20090406
+%define		snap	20090408
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.3.%{snap}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	2284943fb952e32ecec8a0d7fd60ea8e
+# Source0-md5:	00ffb68adf9cc6ae4f6a5685fee74b92
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -95,9 +95,8 @@ Ten pakiet należy zainstalować w środowisku chroot buildera.
 %prep
 %setup -q
 %{__sed} -i -e '
-	s,~/pld-builder.new/,%{_sharedstatedir}/%{name}/,
-	/^conf_dir/s,=.*,= "%{_sysconfdir}/",
-
+	/^root_dir/s,=.*,= "%{_sharedstatedir}/%{name}",
+	/^conf_dir/s,=.*,= "%{_sysconfdir}",
 ' PLD_Builder/path.py
 
 %{__sed} -i -e '
