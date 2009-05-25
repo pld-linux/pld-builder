@@ -1,13 +1,13 @@
-%define		snap	20090408
+%define		snap	20090525
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
-Version:	0.3.%{snap}
-Release:	2
+Version:	0.4.%{snap}
+Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	00ffb68adf9cc6ae4f6a5685fee74b92
+# Source0-md5:	6ccce8608108424378755eec993fce36
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
