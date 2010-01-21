@@ -3,11 +3,11 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.5.%{snap}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	d282da54be3fdd419d518def38dc1555
+# Source0-md5:	fec0255024348d2d3253ebca9b0b7b26
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -21,6 +21,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	/usr/lib/sendmail
 Requires:	bash
 Requires:	crondaemon
 Requires:	gnupg
@@ -81,6 +82,9 @@ Requires:	mount
 Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
 Requires:	tmpwatch
+# NOTE: vserver-packages is usually hidden, so you must install it manually with --noignore
+Requires:	basesystem
+Requires:	vserver-packages
 Provides:	group(builder)
 Provides:	user(builder)
 # for srpm builder
@@ -235,7 +239,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %post
 /sbin/chkconfig --add %{name}
-%service %{name} restart
 
 %preun
 if [ "$1" = "0" ]; then
@@ -267,7 +270,8 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
 
 %dir %{_sysconfdir}
-%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*
+%attr(640,root,builder) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
+%attr(640,root,builder) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/rsync-passwords
 
 %dir %{_datadir}
 %dir %{_datadir}/bin
