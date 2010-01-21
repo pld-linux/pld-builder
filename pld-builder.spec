@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.5.%{snap}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -186,13 +186,13 @@ cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
 install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
-install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,{SOURCES,SPECS}/CVS}
+install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,packages/CVS}
 install -d $RPM_BUILD_ROOT/var/cache/%{name}/ready
-ln -s %{_bindir}/builder $RPM_BUILD_ROOT/home/services/builder/rpm/SPECS
+ln -s %{_bindir}/builder $RPM_BUILD_ROOT/home/services/builder/rpm/packages
 
-echo "SPECS" > $RPM_BUILD_ROOT/home/services/builder/rpm/SPECS/CVS/Repository
-echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/builder/rpm/SPECS/CVS/Root
-touch $RPM_BUILD_ROOT/home/services/builder/rpm/SPECS/CVS/Entries{,.Static}
+echo "packages" > $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Repository
+echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Root
+touch $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Entries{,.Static}
 
 install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
 cp -a poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
@@ -307,16 +307,15 @@ fi
 %dir %attr(750,builder,builder) /home/services/builder/rpm/BUILD
 %dir %attr(750,builder,builder) /home/services/builder/rpm/RPMS
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
-%dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
-%dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
+%dir %attr(750,builder,builder) /home/services/builder/rpm/packages
 
 # for srpm builder
-%attr(750,builder,builder) /home/services/builder/rpm/SPECS/builder
-%dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS/CVS
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/SPECS/CVS/Repository
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/SPECS/CVS/Root
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/SPECS/CVS/Entries
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/SPECS/CVS/Entries.Static
+%attr(750,builder,builder) /home/services/builder/rpm/packages/builder
+%dir %attr(750,builder,builder) /home/services/builder/rpm/packages/CVS
+%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Repository
+%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Root
+%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Entries
+%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Entries.Static
 
 # minimal but sane defaults for rpm inside chroot
 %config(noreplace) %verify(not md5 mtime size) /etc/rpm/macros.builder
