@@ -1,13 +1,13 @@
-%define		snap	20100121
+%define		snap	20100122
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.5.%{snap}
-Release:	3
+Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	fec0255024348d2d3253ebca9b0b7b26
+# Source0-md5:	c184d87366a49e1a11d55e5c1ff032b4
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -187,7 +187,7 @@ done
 cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 
 # dirs
-install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock,www/{s,}rpms},/etc/{sysconfig,rc.d/init.d}}
+install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock},/etc/{sysconfig,rc.d/init.d}}
 install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
 install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,packages/CVS}
@@ -213,8 +213,7 @@ install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 # from admin/fresh-queue.sh
 cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
-install -d spool/{builds,buildlogs,notify,ftp} www/srpms lock
-echo 0 > www/max_req_no
+install -d spool/{builds,buildlogs,notify,ftp} lock
 echo 0 > spool/last_req_no
 echo -n > spool/processed_ids
 echo -n > spool/got_lock
@@ -294,11 +293,6 @@ fi
 %attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/spool/req_queue
 
 %dir %attr(775,root,builder) %{_sharedstatedir}/%{name}/lock
-
-%dir %{_sharedstatedir}/%{name}/www
-%dir %{_sharedstatedir}/%{name}/www/rpms
-%dir %{_sharedstatedir}/%{name}/www/srpms
-%attr(644,builder,builder) %config(noreplace) %verify(not md5 mtime size) %{_sharedstatedir}/%{name}/www/max_req_no
 
 %dir %attr(750,builder,builder) /home/services/builder
 %dir %attr(750,builder,builder) /home/services/builder/.gnupg
