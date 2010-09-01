@@ -3,7 +3,7 @@ Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.5.%{snap}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
