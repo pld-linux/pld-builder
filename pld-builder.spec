@@ -7,7 +7,7 @@ Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	e9a5c9c45ed2fbd6c99200031cd7260f
+# Source0-md5:	38a0c4bbb29fcd115341a0ab50632ce6
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
