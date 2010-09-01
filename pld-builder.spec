@@ -1,4 +1,4 @@
-%define		snap	20100509
+%define		snap	20100901
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
