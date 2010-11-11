@@ -24,6 +24,7 @@ Requires(pre):	/usr/sbin/useradd
 Requires:	/usr/lib/sendmail
 Requires:	bash
 Requires:	crondaemon
+Requires:	filesystem >= 3.0-33
 Requires:	gnupg
 Requires:	libuuid
 Requires:	python
@@ -78,6 +79,7 @@ Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	bash
+Requires:	filesystem >= 3.0-33
 Requires:	mount
 Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
