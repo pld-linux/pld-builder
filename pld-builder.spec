@@ -1,13 +1,13 @@
-%define		snap	20101111
+%define		snap	20101228
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.5.%{snap}
-Release:	3
+Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	33912ce1eff84b97afc1d686015d5b28
+# Source0-md5:	d568f81712e1421a47b23b68f7ef0572
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
@@ -114,10 +114,11 @@ Ten pakiet należy zainstalować w środowisku chroot buildera.
 cat <<'EOF' > poldek.conf
 # locally cached rpms
 [source]
-name = ready
-pri  = -1
-type = dir
-path = /var/cache/%{name}/ready/
+name   = ready
+pri    = -1
+type   = dir
+path   = /var/cache/%{name}/ready/
+autoup = no
 EOF
 
 cat <<'EOF' > crontab
