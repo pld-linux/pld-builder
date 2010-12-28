@@ -10,6 +10,10 @@ Source0:	%{name}-%{version}.tar.bz2
 # Source0-md5:	d568f81712e1421a47b23b68f7ef0572
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
+Source3:	poldek.conf
+Source4:	rpm.macros
+Source5:	crontab
+Source6:	procmailrc
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
@@ -111,61 +115,6 @@ Ten pakiet należy zainstalować w środowisku chroot buildera.
 	s,/spools/ready,/var/cache/%{name}/ready,
 ' config/builder.conf
 
-cat <<'EOF' > poldek.conf
-# locally cached rpms
-[source]
-name   = ready
-pri    = -1
-type   = dir
-path   = /var/cache/%{name}/ready/
-autoup = no
-EOF
-
-cat <<'EOF' > crontab
-SHELL=/bin/sh
-MAILTO=root
-
-#* * * * * builder exec nice -n 19 %{_datadir}/bin/request-fetcher.sh
-#* * * * * builder exec nice -n 19 %{_datadir}/bin/load-balancer.sh
-#* * * * * builder exec nice -n 19 %{_datadir}/bin/file-sender.sh
-
-#0 0 * * * chroot /home/users/builder/chroot-ac nice -n 19 tmpwatch -m 240 /var/cache/%{name}/ready
-EOF
-
-cat <<'EOF' > procmailrc
-LOGFILE=procmail.log
-
-#:0 c
-#mail.copy
-
-:0
-* ^X-New-PLD-Builder:
-| %{_datadir}/bin/request-handler.sh
-
-:0
-* ^FROM_MAILER
-/dev/null
-
-#:0
-#!root@example.org
-EOF
-
-cat <<'EOF' > rpm.macros
-# rpm macros for pld builder chroot
-
-# A colon separated list of desired locales to be installed;
-# "all" means install all locale specific files.
-%%_install_langs en_US
-
-# If non-zero, all erasures will be automagically repackaged.
-%%_repackage_all_erasures    0
-
-# Boolean (i.e. 1 == "yes", 0 == "no") that controls whether files
-# marked as %doc should be installed.
-# FIXME: excludedocs breaks kde build
-#%%_excludedocs   1
-EOF
-
 %build
 %{__make}
 %py_lint PLD_Builder
@@ -202,17 +151,17 @@ echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/b
 touch $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Entries{,.Static}
 
 install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
-cp -a poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
+cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/rpm
-cp -a rpm.macros $RPM_BUILD_ROOT/etc/rpm/macros.builder
+cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/rpm/macros.builder
 
 # crontab
 install -d $RPM_BUILD_ROOT/etc/cron.d
-cp -a crontab $RPM_BUILD_ROOT/etc/cron.d/%{name}
+cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
-install %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
-install %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
+cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 # from admin/fresh-queue.sh
 cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
