@@ -14,6 +14,7 @@ Source3:	poldek.conf
 Source4:	rpm.macros
 Source5:	crontab
 Source6:	procmailrc
+Source7:	sudo
 URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
@@ -124,11 +125,11 @@ rm -rf $RPM_BUILD_ROOT
 
 # python
 install -d $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
-cp -a PLD_Builder/*.py[co] $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
+cp -p PLD_Builder/*.py[co] $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
 
 # other
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
-cp -a config/{rsync-passwords,*.conf} $RPM_BUILD_ROOT%{_sysconfdir}
+cp -p config/{rsync-passwords,*.conf} $RPM_BUILD_ROOT%{_sysconfdir}
 install -d $RPM_BUILD_ROOT%{_datadir}/{bin,admin}
 for a in bin/*.sh; do
 sed -e '
@@ -151,17 +152,21 @@ echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/b
 touch $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Entries{,.Static}
 
 install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
-cp -a %{SOURCE3} $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
+cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/rpm
-cp -a %{SOURCE4} $RPM_BUILD_ROOT/etc/rpm/macros.builder
+cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rpm/macros.builder
 
 # crontab
 install -d $RPM_BUILD_ROOT/etc/cron.d
-cp -a %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}
+cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}
+
+# sudo
+install -d $RPM_BUILD_ROOT/etc/sudoers.d
+cp -p %{SOURCE7} $RPM_BUILD_ROOT/etc/sudoers.d/%{name}
 
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
-cp -a %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
+cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 # from admin/fresh-queue.sh
 cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
@@ -219,6 +224,7 @@ fi
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
 
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/cron.d/%{name}
+%attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sudoers.d/%{name}
 
 %dir %{_sysconfdir}
 %attr(640,root,builder) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
