@@ -28,6 +28,7 @@ Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
 Requires:	/usr/lib/sendmail
 Requires:	bash
+Requires:	bzip2
 Requires:	crondaemon
 Requires:	filesystem >= 3.0-33
 Requires:	gnupg
