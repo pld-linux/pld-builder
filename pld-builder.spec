@@ -1,4 +1,4 @@
-%define		snap	20111127
+%define		snap	20120521
 Summary:	PLD RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
@@ -7,7 +7,7 @@ Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	e9aeb082ad8f2b7d653b24a17ef87b7f
+# Source0-md5:	4b97eb1a41bb8eee194d70180b423ca3
 Source1:	%{name}.init
 Source2:	%{name}.sysconfig
 Source3:	poldek.conf
