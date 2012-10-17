@@ -1,21 +1,14 @@
-%define		snap	20120521
-Summary:	PLD RPM builder environment
+%define		snap	20121018
+Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
-Version:	0.5.%{snap}
+Version:	0.6.%{snap}
 Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	4b97eb1a41bb8eee194d70180b423ca3
-Source1:	%{name}.init
-Source2:	%{name}.sysconfig
-Source3:	poldek.conf
-Source4:	rpm.macros
-Source5:	crontab
-Source6:	procmailrc
-Source7:	sudo
-URL:		http://cvs.pld-linux.org/cgi-bin/cvsweb/pld-builder.new/
+# Source0-md5:	49928281bfd6a6235a90a90e7b73d55c
+URL:		http://git.pld-linux.org/?p=projects/pld-builder.new.git;a=summary
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.469
@@ -107,6 +100,11 @@ Ten pakiet należy zainstalować w środowisku chroot buildera.
 
 %prep
 %setup -q
+
+for a in config/*.dist; do
+	mv $a ${a%.dist}
+done
+
 %{__sed} -i -e '
 	/^root_dir/s,=.*,= "%{_sharedstatedir}/%{name}",
 	/^conf_dir/s,=.*,= "%{_sysconfdir}",
@@ -153,21 +151,21 @@ echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/b
 touch $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Entries{,.Static}
 
 install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
-cp -p %{SOURCE3} $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
+cp -p etc/poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
 
 install -d $RPM_BUILD_ROOT/etc/rpm
-cp -p %{SOURCE4} $RPM_BUILD_ROOT/etc/rpm/macros.builder
+cp -p etc/rpm.macros $RPM_BUILD_ROOT/etc/rpm/macros.builder
 
 # crontab
 install -d $RPM_BUILD_ROOT/etc/cron.d
-cp -p %{SOURCE5} $RPM_BUILD_ROOT/etc/cron.d/%{name}
+cp -p etc/crontab $RPM_BUILD_ROOT/etc/cron.d/%{name}
 
 # sudo
 install -d $RPM_BUILD_ROOT/etc/sudoers.d
-cp -p %{SOURCE7} $RPM_BUILD_ROOT/etc/sudoers.d/%{name}
+cp -p etc/sudo $RPM_BUILD_ROOT/etc/sudoers.d/%{name}
 
-install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
-cp -p %{SOURCE2} $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
+install -p etc/pld-builder.init $RPM_BUILD_ROOT/etc/rc.d/init.d/pld-builder
+cp -p etc/pld-builder.sysconfig $RPM_BUILD_ROOT/etc/sysconfig/pld-builder
 
 # from admin/fresh-queue.sh
 cd $RPM_BUILD_ROOT%{_sharedstatedir}/%{name}
@@ -217,9 +215,8 @@ fi
 
 %files
 %defattr(644,root,root,755)
-%doc README TODO
-%doc user-manual.txt
-%lang(pl) %doc jak-to-dziala.txt jak-wysylac-zlecenia.txt
+%doc doc/{README,TODO,user-manual.txt}
+%lang(pl) %doc doc/{jak-to-dziala.txt,jak-wysylac-zlecenia.txt}
 
 %attr(754,root,root) /etc/rc.d/init.d/pld-builder
 %attr(640,root,root) %config(noreplace) %verify(not md5 mtime size) /etc/sysconfig/pld-builder
