@@ -1,13 +1,13 @@
-%define		snap	20121018
+%define		snap	20130619
 Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	1
+Release:	0.1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	49928281bfd6a6235a90a90e7b73d55c
+# Source0-md5:	3b8055c76eafd310c2ce055fcd9e402e
 URL:		http://git.pld-linux.org/?p=projects/pld-builder.new.git;a=summary
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
@@ -60,7 +60,7 @@ http://cvs.pld-linux.org/cgi-bin/cvsweb/builder_ng/
 Summary:	PLD Builder
 Summary(pl.UTF-8):	Budowniczy PLD
 Group:		Development/Building
-%pyrequires_eq	python-modules
+Requires:	python-modules
 
 %description -n python-pld-builder
 PLD Builder Python code.
@@ -77,6 +77,7 @@ Requires(pre):	/bin/id
 Requires(pre):	/usr/bin/getgid
 Requires(pre):	/usr/sbin/groupadd
 Requires(pre):	/usr/sbin/useradd
+Requires:	basesystem
 Requires:	bash
 Requires:	filesystem >= 3.0-33
 Requires:	mount
@@ -84,13 +85,13 @@ Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
 Requires:	tmpwatch
 # NOTE: vserver-packages is usually hidden, so you must install it manually with --noignore
-Requires:	basesystem
 Requires:	vserver-packages
 Provides:	group(builder)
 Provides:	user(builder)
 # for srpm builder
-Requires:	cvs-client
+Requires:	git-core
 Requires:	rpm-build-tools
+Requires:	rpm-specdump
 
 %description chroot
 This is the package to be installed in builder chroot.
@@ -142,13 +143,9 @@ cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock},/etc/{sysconfig,rc.d/init.d}}
 install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
-install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,SPECS,SOURCES,packages/CVS}
+install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,SPECS,SOURCES,packages}
 install -d $RPM_BUILD_ROOT/var/cache/%{name}/ready
 ln -s %{_bindir}/builder $RPM_BUILD_ROOT/home/services/builder/rpm/packages
-
-echo "packages" > $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Repository
-echo ":pserver:cvs@cvs.pld-linux.org:/cvsroot" > $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Root
-touch $RPM_BUILD_ROOT/home/services/builder/rpm/packages/CVS/Entries{,.Static}
 
 install -d $RPM_BUILD_ROOT/etc/poldek/repos.d
 cp -p etc/poldek.conf $RPM_BUILD_ROOT/etc/poldek/repos.d/%{name}.conf
@@ -267,11 +264,6 @@ fi
 
 # for srpm builder
 %attr(750,builder,builder) /home/services/builder/rpm/packages/builder
-%dir %attr(750,builder,builder) /home/services/builder/rpm/packages/CVS
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Repository
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Root
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Entries
-%attr(640,builder,builder) %config(noreplace) %verify(not md5 mtime size) /home/services/builder/rpm/packages/CVS/Entries.Static
 
 # minimal but sane defaults for rpm inside chroot
 %config(noreplace) %verify(not md5 mtime size) /etc/rpm/macros.builder
