@@ -1,4 +1,4 @@
-%define		snap	20140520
+%define		snap	20141202
 Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
@@ -7,7 +7,7 @@ Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	3b8d6ae927004ef221fe422b03d43b4c
+# Source0-md5:	2fae9f6f0db55331306ed5351219fdcb
 URL:		http://git.pld-linux.org/projects/pld-builder.new
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
