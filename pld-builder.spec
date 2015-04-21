@@ -3,7 +3,7 @@ Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -38,6 +38,23 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/pld-builder
 %define		_datadir	/usr/share/%{name}
+
+# ensure these packaegs are never removed
+%define keep_packages() { \
+	f=/etc/rpm/sysinfo/Requirename; \
+	for pkg in %*; do \
+		grep -q "^$pkg$" $f && continue; \
+		echo $pkg >> $f; \
+	done; \
+}
+
+# remove packages from keep
+%define undo_keep_packages() { \
+	f=/etc/rpm/sysinfo/Requirename; \
+	for pkg in %*; do \
+		%{__sed} -i -e "/^$pkg$/d" $f; \
+	done; \
+}
 
 %description
 PLD RPM builder environment. This is the freshest "new" builder.
@@ -205,10 +222,14 @@ if [ "$1" = "0" ]; then
 	%groupremove builder
 fi
 
+%post chroot
+%keep_packages pld-builder-chroot
+
 %postun chroot
 if [ "$1" = "0" ]; then
 	%userremove builder
 	%groupremove builder
+	%undo_keep_packages pld-builder-chroot
 fi
 
 %files
