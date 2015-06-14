@@ -3,7 +3,7 @@ Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	2
+Release:	3
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -161,7 +161,7 @@ cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock},/etc/{sysconfig,rc.d/init.d}}
 install -d $RPM_BUILD_ROOT/home/services/builder/.gnupg
 install -d $RPM_BUILD_ROOT/home/services/builder/.ssh
-install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,SPECS,SOURCES,packages}
+install -d $RPM_BUILD_ROOT/home/services/builder/rpm/{BUILD,RPMS,SRPMS,packages}
 install -d $RPM_BUILD_ROOT/var/cache/%{name}/ready
 ln -s %{_bindir}/builder $RPM_BUILD_ROOT/home/services/builder/rpm/packages
 
@@ -280,8 +280,6 @@ fi
 %dir %attr(750,builder,builder) /home/services/builder/rpm/BUILD
 %dir %attr(750,builder,builder) /home/services/builder/rpm/RPMS
 %dir %attr(750,builder,builder) /home/services/builder/rpm/SRPMS
-%dir %attr(750,builder,builder) /home/services/builder/rpm/SPECS
-%dir %attr(750,builder,builder) /home/services/builder/rpm/SOURCES
 %dir %attr(750,builder,builder) /home/services/builder/rpm/packages
 
 # for srpm builder
