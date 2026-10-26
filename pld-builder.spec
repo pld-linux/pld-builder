@@ -3,7 +3,7 @@ Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	4
+Release:	5
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -102,8 +102,6 @@ Requires:	poldek >= 0.21-0.20070703.00.16
 Requires:	rpm-build
 Requires:	time
 Requires:	tmpwatch
-# NOTE: vserver-packages is usually hidden, so you must install it manually with --noignore
-Requires:	vserver-packages
 Provides:	group(builder)
 Provides:	user(builder)
 # for srpm builder
