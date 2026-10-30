@@ -1,13 +1,13 @@
-%define		snap	20141202
+%define		snap	20261030
 Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	5
+Release:	1
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
-# Source0-md5:	2fae9f6f0db55331306ed5351219fdcb
+# Source0-md5:	631bb57d8f259e906d8160dca0388b9b
 URL:		http://git.pld-linux.org/projects/pld-builder.new
 BuildRequires:	python
 BuildRequires:	rpm-pythonprov
@@ -134,14 +134,15 @@ done
 
 %build
 %{__make}
-%py_lint PLD_Builder
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 # python
-install -d $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
-cp -p PLD_Builder/*.py[co] $RPM_BUILD_ROOT%{py_scriptdir}/PLD_Builder
+install -d $RPM_BUILD_ROOT%{py3_sitescriptdir}/PLD_Builder
+cp -p PLD_Builder/*.py $RPM_BUILD_ROOT%{py3_sitescriptdir}/PLD_Builder
+%py3_comp $RPM_BUILD_ROOT%{py3_sitescriptdir}/PLD_Builder
+%py3_ocomp $RPM_BUILD_ROOT%{py3_sitescriptdir}/PLD_Builder
 
 # other
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
@@ -150,7 +151,7 @@ install -d $RPM_BUILD_ROOT%{_datadir}/{bin,admin}
 for a in bin/*.sh; do
 sed -e '
 	/cd ~\/pld-builder.new/d
-	s,python \(PLD_Builder.*.py\),python %{py_scriptdir}/\1c,
+	s,python \(PLD_Builder.*.py\),python %{py3_sitescriptdir}/\1c,
 ' $a > $RPM_BUILD_ROOT%{_datadir}/bin/$(basename $a)
 done
 cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
@@ -293,4 +294,4 @@ fi
 
 %files -n python-pld-builder
 %defattr(644,root,root,755)
-%{py_scriptdir}/PLD_Builder
+%{py3_sitescriptdir}/PLD_Builder
