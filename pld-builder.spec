@@ -3,7 +3,7 @@ Summary:	PLD Linux RPM builder environment
 Summary(pl.UTF-8):	Środowisko budowniczego pakietów RPM dla PLD
 Name:		pld-builder
 Version:	0.6.%{snap}
-Release:	1
+Release:	2
 License:	GPL
 Group:		Development/Building
 Source0:	%{name}-%{version}.tar.bz2
@@ -37,7 +37,6 @@ BuildArch:	noarch
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sysconfdir	/etc/pld-builder
-%define		_datadir	/usr/share/%{name}
 
 # ensure these packaegs are never removed
 %define keep_packages() { \
@@ -147,14 +146,14 @@ cp -p PLD_Builder/*.py $RPM_BUILD_ROOT%{py3_sitescriptdir}/PLD_Builder
 # other
 install -d $RPM_BUILD_ROOT%{_sysconfdir}
 cp -p config/{rsync-passwords,*.conf} $RPM_BUILD_ROOT%{_sysconfdir}
-install -d $RPM_BUILD_ROOT%{_datadir}/{bin,admin}
+install -d $RPM_BUILD_ROOT%{_datadir}/%{name}/{bin,admin}
 for a in bin/*.sh; do
 sed -e '
 	/cd ~\/pld-builder.new/d
 	s,python \(PLD_Builder.*.py\),python %{py3_sitescriptdir}/\1c,
-' $a > $RPM_BUILD_ROOT%{_datadir}/bin/$(basename $a)
+' $a > $RPM_BUILD_ROOT%{_datadir}/%{name}/bin/$(basename $a)
 done
-cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/admin
+cp -a admin/*.sh $RPM_BUILD_ROOT%{_datadir}/%{name}/admin
 
 # dirs
 install -d $RPM_BUILD_ROOT{%{_sharedstatedir}/%{name}/{spool/{buildlogs,builds,ftp,notify},lock},/etc/{sysconfig,rc.d/init.d}}
@@ -246,11 +245,11 @@ fi
 %attr(640,root,builder) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/*.conf
 %attr(640,root,builder) %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/rsync-passwords
 
-%dir %{_datadir}
-%dir %{_datadir}/bin
-%attr(755,root,root) %{_datadir}/bin/*
-%dir %{_datadir}/admin
-%attr(755,root,root) %{_datadir}/admin/*
+%dir %{_datadir}/%{name}
+%dir %{_datadir}/%{name}/bin
+%attr(755,root,root) %{_datadir}/%{name}/bin/*
+%dir %{_datadir}/%{name}/admin
+%attr(755,root,root) %{_datadir}/%{name}/admin/*
 
 %dir %{_sharedstatedir}/%{name}
 
